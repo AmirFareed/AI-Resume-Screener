@@ -119,8 +119,15 @@ PROGRESS_BG = "#2c3e50" if dark_mode else "#ecf0f1"
 # ============================================================
 @st.cache_resource
 def load_model():
-    """Load sentence transformer model — cached across reruns."""
-    return SentenceTransformer("all-MiniLM-L6-v2")
+    """Load fine-tuned model. Falls back to smaller model if RAM is limited."""
+    try:
+        model = SentenceTransformer("Amirktk0312/resume-screener-bge-finetuned")
+        print("✅ Loaded fine-tuned model (1024-dim)")
+        return model
+    except Exception:
+        model = SentenceTransformer("all-mpnet-base-v2")
+        print("⚠️ Loaded fallback model (768-dim)")
+        return model
 
 
 # ============================================================
